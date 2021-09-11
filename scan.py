@@ -2,8 +2,8 @@ from simulate_apy import Simulator
 from multiprocessing import Pool
 import numpy as np
 
-As = [2, 10, 50]
-gammas = np.logspace(np.log10(5e-7), np.log10(2e-3), 20)
+As = [2, 10, 50, 135]
+gammas = np.logspace(np.log10(5e-8), np.log10(2e-3), 30)
 
 sim = Simulator()
 

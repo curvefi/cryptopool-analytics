@@ -8,13 +8,13 @@ FEE = 0.003 * 2/3
 
 # not feasible gas-wise if lower
 # makes sense to do like gas / fee * 2 or thereabouts
-USD_TRADE_LIMIT = 50000  # USD
+USD_TRADE_LIMIT = 0  # USD
+TRUNC_BLOCK = 12580000
 
 
 def load():
     with gzip.open('trades.json.gz', 'r') as f:
         data = json.load(f)
-    TRUNC_BLOCK = 12580000
 
     pre_profits = []
     pre_prices = []
