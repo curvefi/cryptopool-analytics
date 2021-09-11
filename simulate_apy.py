@@ -1,9 +1,14 @@
 import gzip
 import json
 import numpy as np
+from scipy.interpolate import interp1d
 from plot_curve import f_profit_deriv, f_liq_density
 
 FEE = 0.003 * 2/3
+
+# not feasible gas-wise if lower
+# makes sense to do like gas / fee * 2 or thereabouts
+USD_TRADE_LIMIT = 50000  # USD
 
 
 def load():
@@ -14,23 +19,30 @@ def load():
     pre_profits = []
     pre_prices = []
     price_0 = {}  # eth-usdt, eth-wbtc, wbtc-usdc
-    for pair, d in data['pricevol'].items():
-        # price_0[pair] = d[0]['p']
+    btc2usd = None
+    for pair in ['eth-usdt', 'wbtc-usdc', 'eth-wbtc']:
+        d = data['pricevol'][pair]
+        _t = []
+        _price = []
         for obj in d:
             if obj['block'] < TRUNC_BLOCK:
                 continue
             if pair not in price_0:
                 price_0[pair] = obj['p']
             low_vol = False
+
+            # This handling of truncating small trades is a bit dirty but works
             if pair == 'eth-usdt':
-                if obj['volume'] < 100000:  # XXX these are hardcoded min trade values: should be done in a more precise way
+                if obj['volume'] < USD_TRADE_LIMIT:
                     low_vol = True
             elif pair == 'eth-wbtc':
-                if obj['volume'] < 3:
+                v = btc2usd(obj['t']) * obj['volume']
+                if v < USD_TRADE_LIMIT:
                     low_vol = True
             elif pair == 'wbtc-usdc':
-                if obj['volume'] < 100000:
+                if obj['volume'] < USD_TRADE_LIMIT:
                     low_vol = True
+
             if low_vol:
                 pre_profits += [(obj['t'], 0.0)]
             else:
@@ -40,6 +52,12 @@ def load():
             pre_prices += [
                 (obj['t'], pair, obj['p'])
             ]
+            _t.append(obj['t'])
+            _price.append(obj['p'])
+
+        if pair == 'wbtc-usdc':
+            btc2usd = interp1d(_t, _price, fill_value='extrapolate')
+
     pre_profits = sorted(pre_profits)
     pre_prices = sorted(pre_prices)
     prices = []
