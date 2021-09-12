@@ -4,6 +4,11 @@ import numpy as np
 from scipy.interpolate import interp1d
 from plot_curve import f_profit_deriv, f_liq_density
 
+# For calculating AMM fee
+OUT_FEE = 0.003
+IN_FEE = 0.0021  # Not the real fee because there are more trades at lower fee, and we don't take that into account
+FEE_GAMMA = 5e-4
+
 FEE = 0.003 * 2/3
 
 # not feasible gas-wise if lower
@@ -12,8 +17,13 @@ USD_TRADE_LIMIT = 0  # USD
 TRUNC_BLOCK = 12580000
 
 
+def get_fee(delta):
+    f = FEE_GAMMA / (FEE_GAMMA + delta**2 / 3)
+    return IN_FEE * f + OUT_FEE * (1 - f)
+
+
 def load():
-    with gzip.open('trades.json.gz', 'r') as f:
+    with gzip.open('trades-recent.json.gz', 'r') as f:
         data = json.load(f)
 
     pre_profits = []
@@ -108,9 +118,9 @@ class Simulator:
 
         # for t, profit, ema in zip(self.times[1:], self.profits, self.emas):
         for i in range(1, len(self.times)):
-            _profit += self.profits[i] - self.profits[i - 1]
             pvec = np.log(self.emas[i] / p[-1])
             delta = (pvec ** 2).sum() ** .5
+            _profit += (self.profits[i] - self.profits[i - 1]) * (get_fee(delta) / (1.5 * FEE))  # The last multiplier is approx / can be 1?
             lds.append(f_ld(delta))
             if delta < self.step or self.profits[i] == self.profits[i - 1]:
                 p.append(p[-1])
@@ -145,9 +155,6 @@ if __name__ == '__main__':
     import pylab
 
     s = Simulator()
-
-    A0 = 0.2
-    gamma0 = 3e-4
 
     # for mul in 2 ** np.arange(10):
     #     for gamma_mul in np.logspace(np.log10(0.1), np.log10(10), 5):
