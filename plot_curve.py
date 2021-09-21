@@ -57,6 +57,8 @@ if __name__ == '__main__':
     import pylab
     d_price = np.linspace(-20e-2, 20e-2, 1000)
     # pylab.plot(d_price, f_liq_density(2 * 3**3 * 10000, int(2e-3 * 1e18))(d_price))
-    pylab.plot(d_price, f_profit_deriv(int(2 * 3**3 * 10000), int(2.8e-5 * 1e18))(d_price))
-    pylab.plot(d_price, f_profit_deriv(int(2 * 3**3 * 10000) * 5, int(1.19913e-5 * 1e18))(d_price), '--')
+    # pylab.plot(d_price, f_profit_deriv(int(2 * 3**3 * 10000), int(2.8e-5 * 1e18))(d_price))
+    # pylab.plot(d_price, f_profit_deriv(int(2 * 3**3 * 10000) * 10, int(2.8e-5 * 1e18 / 10**.5))(d_price), '--')
+    pylab.semilogy(d_price, f_liq_density(int(2 * 3**3 * 10000), int(2.8e-5 * 1e18))(d_price))
+    pylab.semilogy(d_price, f_liq_density(int(2 * 3**3 * 10000) * 10, int(2.8e-5 * 1e18 / 10**.5))(d_price), '--')
     pylab.show()
