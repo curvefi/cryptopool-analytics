@@ -59,4 +59,5 @@ if __name__ == '__main__':
     # pylab.plot(d_price, f_liq_density(2 * 3**3 * 10000, int(2e-3 * 1e18))(d_price))
     pylab.plot(d_price, f_profit_deriv(int(0.2 * 3**3 * 10000), int(2.8e-5 * 1e18))(d_price))
     pylab.plot(d_price, f_profit_deriv(int(0.2 * 3**3 * 10000), int(2.8e-4 * 1e18))(d_price))
+    pylab.plot(d_price, f_profit_deriv(int(2 * 3**3 * 10000), int(8e-6 * 1e18))(d_price), '--')
     pylab.show()
