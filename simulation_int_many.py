@@ -17,8 +17,8 @@ def geometric_mean(x):
         diff = abs(D - D_prev)
         if diff <= 1 or diff * 10**18 < D:
             return D
-    print(x)
-    raise ValueError("Did not converge")
+    # Convergence error
+    return D
 
 
 def reduction_coefficient(x, gamma):
