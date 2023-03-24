@@ -5,9 +5,7 @@ from simulation_int_many import Curve, geometric_mean
 N = 3
 A = int(1000 * N**N * 10000)
 gamma = int(4e-4 * 1e18)
-D = 1000 * 10**18
-dp = 1e-8
-dx = 1e-6
+fee = 0.7e-4
 
 
 class PCurve(Curve):
@@ -21,7 +19,7 @@ class PCurve(Curve):
         return geometric_mean(X)
 
 
-def f_slippage():
+def f_slippage(A, gamma):
     D = 3 * 10**18
     c = PCurve(A, gamma, D, N)
     p = []
@@ -40,8 +38,9 @@ def f_slippage():
 
 if __name__ == '__main__':
     import pylab
-    amounts, p = f_slippage()
-    pylab.loglog(amounts, p)
+    for _A, _gamma in [(A, gamma), (A*10, gamma)]:
+        amounts, p = f_slippage(_A, _gamma)
+        pylab.loglog(amounts, fee + p)
     pylab.xlabel('trade_size / pool_size')
     pylab.ylabel('Relative price impact')
     pylab.show()
