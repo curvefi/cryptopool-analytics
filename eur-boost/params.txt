@@ -1,0 +1,5 @@
+A = 37.8
+gamma = 0.00278
+mid_fee = 0.0003
+out_fee = 0.002
+fee_gamma = 1e-3
