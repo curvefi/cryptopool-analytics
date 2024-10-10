@@ -203,7 +203,7 @@ if __name__ == '__main__':
     simulator = Simulator(
             filename='btcusdt-2023-2024.json',
             ext_fee=0.0002, add_reverse=True,
-            log=False, verbose=False, func=sqrt)
+            log=False, verbose=False)
 
     for fee in np.logspace(log10(0.0005), log10(0.2), 30):
         loss = simulator.single_run(fee=fee, Texp=866, leverage=2)
@@ -212,5 +212,5 @@ if __name__ == '__main__':
     print()
 
     for t in np.logspace(log10(200), log10(500000), 30):
-        loss = simulator.single_run(fee=0.004, Texp=t, leverage=2)
+        loss = simulator.single_run(fee=0.0065, Texp=t, leverage=2)
         print(t, loss)
