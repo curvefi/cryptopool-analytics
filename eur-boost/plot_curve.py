@@ -6,8 +6,8 @@ from scipy.interpolate import interp1d
 from simulation_int_many import Curve, geometric_mean
 
 
-A = 37.8
-gamma = 0.00278
+A = 38.5
+gamma = 0.0029
 
 
 D = 2 * 10**18

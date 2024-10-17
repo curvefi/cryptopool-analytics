@@ -5,10 +5,10 @@ from simulation_int_many import Curve
 
 
 N = 2
-A = int(217 * N**N * 10000)
-gamma = int(0.0094 * 1e18)
+A = int(2.2 * N**N * 10000)
+gamma = int(4.9e-6 * 1e18)
 
-fee_gamma = 0.012
+fee_gamma = 2.9e-6
 mid_fee = 0.03  # %
 out_fee = 0.2   # %
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     pylab.xlabel('Price shift (%)')
     pylab.ylabel('Fee (%)')
 
-    pylab.xlim(-2, 2)
+    pylab.xlim(-0.5, 0.5)
     pylab.ylim(0, 0.19)
 
     pylab.grid()

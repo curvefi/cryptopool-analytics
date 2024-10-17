@@ -1,5 +1,0 @@
-A = 85.78
-gamma = 0.0153
-mid_fee = 0.0004
-out_fee = 0.002
-fee_gamma = 0.009

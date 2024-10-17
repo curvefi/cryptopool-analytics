@@ -5,11 +5,11 @@ from simulation_int_many import Curve
 
 
 N = 2
-A = int(37.8 * N**N * 10000)
-gamma = int(0.00278 * 1e18)
+A = int(38.5 * N**N * 10000)
+gamma = int(0.0029 * 1e18)
 
-fee_gamma = 1e-3
-mid_fee = 0.02  # %
+fee_gamma = 1.22e-3
+mid_fee = 0.03  # %
 out_fee = 0.2   # %
 
 N_POINTS = 5000

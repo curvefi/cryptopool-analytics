@@ -6,8 +6,8 @@ from scipy.interpolate import interp1d
 from simulation_int_many import Curve, geometric_mean
 
 
-A = 217
-gamma = 0.0094
+A = 16
+gamma = 1.5e-5
 
 
 D = 2 * 10**18
@@ -62,13 +62,12 @@ def f_liq_density(A, gamma):
 if __name__ == '__main__':
     import pylab
     dp, dens = f_liq_density(int(A * 2**2 * 10000), int(gamma * 1e18))
-    pylab.semilogy(dp * 100, dens)
+    pylab.plot(dp * 100, dens)
     pylab.xlabel('Price shift (%)')
     pylab.ylabel('Liquidity density (xyk units)')
 
-    pylab.xlim(-2, 2)
-    pylab.ylim(3, 500)
-    pylab.yticks([5, 10, 50, 100], labels=['5', '10', '50', '100'])
+    pylab.xlim(-0.5, 0.5)
+    pylab.ylim(0.8, 35)
 
     pylab.grid()
     pylab.tight_layout()
