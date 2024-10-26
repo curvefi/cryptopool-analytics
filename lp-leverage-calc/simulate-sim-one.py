@@ -3,11 +3,11 @@
 import json
 import lzma
 import numpy as np
-from math import sqrt, log10
+from math import sqrt
 from datetime import datetime
 
 
-PEG_TO = 'price_oracle'  # price_oracle vs price_oracle
+PEG_TO = 'price_oracle'  # price_oracle vs price_scale
 
 
 class AMM:
@@ -155,9 +155,9 @@ class Simulator:
                 amm.trade_to_price(low)
 
             if self.log or self.verbose:
-                d = datetime.fromtimestamp(t).strftime("%Y/%m/%d %H:%M")
                 # current_value = amm.get_value() / ((d['close'] / self.simulation_data[0]['open'])**0.5)**leverage
                 current_value = amm.get_value() / ema**leverage
+                d = datetime.fromtimestamp(t).strftime("%Y/%m/%d %H:%M")
                 loss = current_value / initial_value * 100
                 if self.log:
                     print(f'{d}\t{o:.2f}\t{ema:.2f}\t{amm.get_p():.2f}\t\t{loss:.2f}%')
@@ -177,21 +177,18 @@ if __name__ == '__main__':
     simulator = Simulator(
             filename='detailed-output.json.xz',
             ext_fee=0.0002,
-            log=False, verbose=False)
+            log=False, verbose=True)
 
-    fees = []
-    losses = []
-
-    for fee in np.logspace(log10(0.0005), log10(0.2), 100):
-        fees.append(fee)
-        loss = simulator.single_run(fee=fee, leverage=2)
-        losses.append(loss)
-        print(fee, loss)
+    simulator.single_run(fee=7e-3, leverage=2)
 
     import pylab
-    pylab.semilogx(fees, losses)
-    pylab.xlabel('Rebalancing AMM fee')
-    pylab.ylabel('APY (no borrow rate accounted for)')
+    losses = np.array(simulator.losses[::100])
+    t = losses[:, 0]
+    t = (t - t[0]) / 86400
+    loss = (losses[:, 1] - 1.1 ** (t / 365)) * 100  # 10% APR borrow rate
+    pylab.plot(t, loss)
+    pylab.xlabel('t (days)')
+    pylab.ylabel('Deposit growth (%)')
     pylab.tight_layout()
     pylab.show()
 
