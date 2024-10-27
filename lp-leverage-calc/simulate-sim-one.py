@@ -8,6 +8,7 @@ from datetime import datetime
 
 
 PEG_TO = 'price_oracle'  # price_oracle vs price_scale
+BORROW_RATE = 0.1
 
 
 class AMM:
@@ -133,6 +134,8 @@ class Simulator:
         ema0 = self.simulation_data[0][PEG_TO]
         V0 = self.simulation_data[0]['token0'] + self.simulation_data[0]['token1'] * self.simulation_data[0]['low']
 
+        t_prev = t_start
+
         for d in self.simulation_data:
             t = d['t']
             o = d['open']
@@ -153,6 +156,9 @@ class Simulator:
 
             if low < amm.get_p():
                 amm.trade_to_price(low)
+
+            amm.debt *= (1 + BORROW_RATE * (t - t_prev) / (86400 * 365))
+            t_prev = t
 
             if self.log or self.verbose:
                 # current_value = amm.get_value() / ((d['close'] / self.simulation_data[0]['open'])**0.5)**leverage
@@ -185,7 +191,7 @@ if __name__ == '__main__':
     losses = np.array(simulator.losses[::100])
     t = losses[:, 0]
     t = (t - t[0]) / 86400
-    loss = (losses[:, 1] - 1.1 ** (t / 365)) * 100  # 10% APR borrow rate
+    loss = losses[:, 1] * 100
     pylab.plot(t, loss)
     pylab.xlabel('t (days)')
     pylab.ylabel('Deposit growth (%)')

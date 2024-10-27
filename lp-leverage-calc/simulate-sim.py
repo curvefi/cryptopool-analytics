@@ -8,6 +8,7 @@ from datetime import datetime
 
 
 PEG_TO = 'price_oracle'  # price_oracle vs price_oracle
+BORROW_RATE = 0.1
 
 
 class AMM:
@@ -133,6 +134,8 @@ class Simulator:
         ema0 = self.simulation_data[0][PEG_TO]
         V0 = self.simulation_data[0]['token0'] + self.simulation_data[0]['token1'] * self.simulation_data[0]['low']
 
+        t_prev = t_start
+
         for d in self.simulation_data:
             t = d['t']
             o = d['open']
@@ -153,6 +156,9 @@ class Simulator:
 
             if low < amm.get_p():
                 amm.trade_to_price(low)
+
+            amm.debt *= (1 + BORROW_RATE * (t - t_prev) / (86400 * 365))
+            t_prev = t
 
             if self.log or self.verbose:
                 d = datetime.fromtimestamp(t).strftime("%Y/%m/%d %H:%M")
@@ -191,7 +197,7 @@ if __name__ == '__main__':
     import pylab
     pylab.semilogx(fees, losses)
     pylab.xlabel('Rebalancing AMM fee')
-    pylab.ylabel('APY (no borrow rate accounted for)')
+    pylab.ylabel('APY')
     pylab.tight_layout()
     pylab.show()
 
