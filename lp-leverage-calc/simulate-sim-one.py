@@ -191,7 +191,7 @@ if __name__ == '__main__':
     losses = np.array(simulator.losses[::100])
     t = losses[:, 0]
     t = (t - t[0]) / 86400
-    loss = losses[:, 1] * 100
+    loss = losses[:, 1] * 100 - 100
     pylab.plot(t, loss)
     pylab.xlabel('t (days)')
     pylab.ylabel('Deposit growth (%)')
