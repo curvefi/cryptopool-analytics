@@ -98,7 +98,9 @@ class AMM:
         self.debt = x0 - x_after
 
     def get_value(self):
-        return self.collateral * self.p_oracle - self.debt
+        x0 = self.get_x0()
+        Ip = ((x0 - self.debt) * self.collateral * self.p_oracle) ** 0.5
+        return 2 * Ip - x0
 
 
 class Simulator:
