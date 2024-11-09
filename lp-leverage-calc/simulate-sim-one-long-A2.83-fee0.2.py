@@ -196,9 +196,9 @@ if __name__ == '__main__':
     # t = (t - t[0]) / 86400
     loss = losses[:, 1] * 100 - 100
     pylab.plot(t, loss)
-    pylab.xlabel('time')
+    pylab.xlabel('Time')
     pylab.ylabel('Deposit growth (%)')
     pylab.tight_layout()
     pylab.show()
 
-    # Optimal fee = 7e-3
+    # Optimal fee = 1%
