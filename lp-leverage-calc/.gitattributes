@@ -1,3 +1,4 @@
 detailed-output.json.xz filter=lfs diff=lfs merge=lfs -text
 detailed-output-A2.83.json.xz filter=lfs diff=lfs merge=lfs -text
 detailed-output-A4.json.xz filter=lfs diff=lfs merge=lfs -text
+detailed-output-A2.83-fee0.2.json.xz filter=lfs diff=lfs merge=lfs -text
